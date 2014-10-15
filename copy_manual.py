@@ -19,10 +19,10 @@ FILES_TO_CHECK = ["pre-commit", "pre_commit.cfg"]
 all_dirs = os.listdir(SRC)
 
 for directory in all_dirs:
-    for file in FILES_TO_CHECK:
-        path = "%s/%s/.git/hooks/%s" % (SRC, directory, file)
+    for req_file in FILES_TO_CHECK:
+        path = "%s/%s/.git/hooks/%s" % (SRC, directory, req_file)
         if not os.path.exists(path):
-            os.system("cp /usr/share/git-core/templates/hooks/%s %s" % (file, path))
+            os.system("cp /usr/share/git-core/templates/hooks/%s %s" % (req_file, path))
 
 if __name__ == '__main__':
     pass
