@@ -1,0 +1,43 @@
+#!/usr/bin/python
+
+import subprocess
+import re
+import os
+from sys import exit
+
+EXCLUDE_PATTERNS = "import\s+\*"
+
+def get_staged_files():
+    """
+    get all staged files for next commit
+    """
+    proc = subprocess.Popen(('git', 'status', '--porcelain'), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    out, _ = proc.communicate()
+    staged_files = re.findall(r'^[AM]\s+(.*\.py)', out, re.MULTILINE)
+    return staged_files
+
+
+def validate_with_analysis_tools():
+    """
+    validates staged file with analysis tool and
+    generates report
+    """
+    staged_files = get_staged_files()
+    pyflakes_total_report = ""
+    for each_staged_files in staged_files:
+        proc2 = subprocess.Popen(["pyflakes", \
+            os.path.abspath(each_staged_files)], \
+            stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        pyflakes_report, _ = proc2.communicate()
+        pyflakes_total_report += pyflakes_report
+
+    pyflakes_after_exclusion = [issue for issue in \
+        pyflakes_total_report.splitlines() if not re.findall(EXCLUDE_PATTERNS, issue)]
+
+    if pyflakes_after_exclusion:
+        print "***** Commit failed due to below pyflakes errors *****\n"
+        print "\n".join(pyflakes_after_exclusion)
+        exit(1)
+
+if __name__ == '__main__':
+    validate_with_analysis_tools()
