@@ -14,7 +14,7 @@ copy this file to jiva_buildout and run 'python copy_manual.py'
 import os
 
 SRC = "src"
-FILES_TO_CHECK = ["pre-commit", "pre_commit.cfg"]
+FILES_TO_CHECK = ["pre-commit"]
 
 all_dirs = os.listdir(SRC)
 
