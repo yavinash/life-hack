@@ -1,0 +1,20 @@
+#!/usr/bin/python
+
+import os
+import re
+import sys
+
+def main():
+    danger = 'zeomega'
+    remote_to_org = {}
+    remotes = os.popen("git remote -v").readlines()
+    for remote in remotes:
+        if 'push' in remote:
+            remote = remote.strip().split('\t')
+            remote_to_org[remote[0]] = re.findall(":(.*?)/", remote[1])[0]
+    if remote_to_org[sys.argv[1]] == danger:
+        print "***** Have you lost? Pushing directly to %s *****" % danger
+        sys.exit(1)
+
+if __name__ == "__main__":
+    main()
