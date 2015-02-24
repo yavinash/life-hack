@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# copy to /usr/share/git-core/templates/hooks/pre-push
 
 import os
 import re
