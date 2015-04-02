@@ -8,7 +8,7 @@ copy_manual.py
 This file will copy required hooks from default template dir to
 already cloned repositories If file doesn't exist.
 
-copy this file to jiva_buildout and run 'python copy_manual.py'
+copy this file to buildout path and run 'python copy_manual.py'
 """
 
 import os
