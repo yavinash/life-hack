@@ -4,7 +4,7 @@ Git hook to catch pyflakes issues before committing.
 copy file to '/usr/share/git-core/templates/hooks/' then,
 It will automatically get placed in hooks on each clone
 """
-__author__ = 'yavinash'
+__author__ = 'Avinash Yenikapati'
 
 import subprocess
 import re
