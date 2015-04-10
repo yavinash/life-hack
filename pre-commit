@@ -1,9 +1,10 @@
 #!/usr/bin/python
 """
 Git hook to catch pyflakes issues before committing.
-copy file to '/usr/share/git-core/templates/hooks/' then, 
+copy file to '/usr/share/git-core/templates/hooks/' then,
 It will automatically get placed in hooks on each clone
 """
+__author__ = 'yavinash'
 
 import subprocess
 import re
@@ -11,6 +12,7 @@ import os
 from sys import exit
 
 EXCLUDE_PATTERNS = "import\s+\*"
+TOOLS = ['pyflakes', 'pep8']
 
 def get_staged_files():
     """
@@ -27,21 +29,21 @@ def validate_with_analysis_tools():
     validates staged file with analysis tool and
     generates report
     """
+    issue_dict = {}
     staged_files = get_staged_files()
-    pyflakes_total_report = ""
-    for each_staged_files in staged_files:
-        proc2 = subprocess.Popen(["pyflakes", \
-            os.path.abspath(each_staged_files)], \
-            stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        pyflakes_report, _ = proc2.communicate()
-        pyflakes_total_report += pyflakes_report
-
-    pyflakes_after_exclusion = [issue for issue in \
-        pyflakes_total_report.splitlines() if not re.findall(EXCLUDE_PATTERNS, issue)]
-
-    if pyflakes_after_exclusion:
-        print "***** Commit failed due to below pyflakes errors *****\n"
-        print "\n".join(pyflakes_after_exclusion)
+    for tool in TOOLS:
+        report = ""
+        for each_staged_files in staged_files:
+            proc2 = subprocess.Popen(
+                [tool, os.path.abspath(each_staged_files)], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            report += proc2.communicate()[0]
+        issue_dict.setdefault(tool, []).extend(
+            [issue for issue in report.splitlines() if not re.findall(EXCLUDE_PATTERNS, issue)])
+    if any(issue_dict.values()):
+        print "***** Commit failed due to below pyflakes / pep8 errors *****\n"
+        for k, v in issue_dict.iteritems():
+            print "############ %s ################" % k
+            print "\n".join(v)
         exit(1)
 
 if __name__ == '__main__':
