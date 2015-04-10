@@ -40,9 +40,9 @@ def validate_with_analysis_tools():
         issue_dict.setdefault(tool, []).extend(
             [issue for issue in report.splitlines() if not re.findall(EXCLUDE_PATTERNS, issue)])
     if any(issue_dict.values()):
-        print "***** Commit failed due to below pyflakes / pep8 errors *****\n"
+        print '\033[95m' + "***** Commit failed due to below pyflakes / pep8 errors *****\n" + '\033[0m'
         for k, v in issue_dict.iteritems():
-            print "############ %s ################" % k
+            print '\033[94m'  + "############ %s ################" % k + '\033[0m'
             print "\n".join(v)
         exit(1)
 
