@@ -1,9 +1,16 @@
 #!/usr/bin/python
 """
-Git hook to catch pyflakes issues before committing.
+Git hook to catch pyflakes and pep8 issues before committing.
+
+How it works?
 copy file to '/usr/share/git-core/templates/hooks/' then,
-It will automatically get placed in hooks on each clone
+it will automatically copy to .git/hooks whenever new repository is cloned.
+
+Before committing changes this file will get all staged python files
+and run pyflakes, pep8 on each file and exit commit process if there is any
+violation.
 """
+
 __author__ = 'Avinash Yenikapati'
 
 import subprocess
