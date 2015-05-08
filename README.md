@@ -1,4 +1,4 @@
-automated
+life-hack
 =========
 
 Gist for pre-commit
