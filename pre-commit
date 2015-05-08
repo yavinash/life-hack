@@ -21,6 +21,7 @@ from sys import exit
 EXCLUDE_PATTERNS = "import\s+\*"
 TOOLS = ['pyflakes', 'pep8']
 
+
 def get_staged_files():
     """
     get all staged files for next commit
@@ -38,6 +39,18 @@ def validate_with_analysis_tools():
     """
     issue_dict = {}
     staged_files = get_staged_files()
+    pdb_report = ""
+
+    for each_staged_files in staged_files:
+            proc1 = subprocess.Popen(
+                ('grep', '-Hn', 'pdb', each_staged_files), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            pdb_report = proc1.communicate()[0]
+
+    if pdb_report:
+        print '\033[95m' + "***** Commit failed due to pdb in staged files *****\n" + '\033[0m'
+        print pdb_report
+        exit(1)
+
     for tool in TOOLS:
         report = ""
         for each_staged_files in staged_files:
