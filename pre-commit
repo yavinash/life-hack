@@ -21,6 +21,7 @@ from sys import exit
 EXCLUDE_PATTERNS = "import\s+\*"
 TOOLS = ['pyflakes', 'pep8']
 
+
 def get_staged_files():
     """
     get all staged files for next commit
