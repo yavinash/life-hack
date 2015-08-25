@@ -20,6 +20,7 @@ from sys import exit
 
 EXCLUDE_PATTERNS = "import\s+\*"
 TOOLS = ['pyflakes', 'pep8']
+ZOPE_DATETIME_PDB_PATTERN = "pdb|DateTime"
 
 
 def get_staged_files():
@@ -43,11 +44,11 @@ def validate_with_analysis_tools():
 
     for each_staged_files in staged_files:
             proc1 = subprocess.Popen(
-                ('grep', '-Hn', 'pdb', each_staged_files), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                ('grep', '-EHn', ZOPE_DATETIME_PDB_PATTERN, each_staged_files), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             pdb_report += proc1.communicate()[0]
 
     if pdb_report:
-        print '\033[95m' + "***** Commit failed due to pdb in staged files *****\n" + '\033[0m'
+        print '\033[95m' + "***** Commit failed due to pdb/Zope Datetime related imports in staged files *****\n" + '\033[0m'
         print pdb_report
         exit(1)
 
@@ -62,7 +63,7 @@ def validate_with_analysis_tools():
     if any(issue_dict.values()):
         print '\033[95m' + "***** Commit failed due to below pyflakes / pep8 errors *****\n" + '\033[0m'
         for k, v in issue_dict.iteritems():
-            print '\033[94m'  + "############ %s ################" % k + '\033[0m'
+            print '\033[94m' + "############ %s ################" % k + '\033[0m'
             print "\n".join(v)
         exit(1)
 
